@@ -1,0 +1,7 @@
+services:
+  downloader:
+    build: ./downloader
+    env_file: .env
+    volumes:
+      - ./data:/data
+    profiles: ["tools"]

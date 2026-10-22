@@ -1,0 +1,26 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# data and outputs
+data/
+*.tsv
+*.csv
+*.zip
+*.kaggle-partial
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# node
+node_modules/
+.next/
+
+# editor / OS
+.idea/
+.vscode/
+.DS_Store
