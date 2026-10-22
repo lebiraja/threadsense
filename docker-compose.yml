@@ -1,7 +1,25 @@
 services:
+  mongo:
+    image: mongo:7.0
+    env_file: .env
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./data:/data/import:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
   downloader:
     build: ./downloader
+    user: "1000:1000"
     env_file: .env
     volumes:
       - ./data:/data
     profiles: ["tools"]
+
+volumes:
+  mongo_data:

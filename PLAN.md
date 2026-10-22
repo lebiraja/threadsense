@@ -12,6 +12,16 @@ A Reddit **community recommender and trend finder** built as a batch pipeline on
 
 Rejected datasets: Twitter Friends (about 40k, under the 50k minimum), Sentiment140 (no hashtags), Reddit Data Huge (250 GB), Amazon 2023 (not confirmed on Kaggle).
 
+## 1b. Pivot after checking the data (2026-10-22)
+
+`reddit-selfposts` (the dataset we are using) has only `id, subreddit, title, selftext`: **no author, no timestamp**. 1,013,000 posts, 1,013 subreddits, imported to Mongo (`threadsense.posts_raw`). `reddit-submissions` turned out to be raw HTML pages and is dropped.
+
+So ThreadSense is a **content-based** community recommender, not a per-user one:
+1. Job 1: word counts per subreddit. 2. Job 2: TF-IDF per word per subreddit. 3. Job 3: subreddit-to-subreddit similarity (related communities, graph edges). 4. Job 4: for pasted text, score all subreddits and return top 5.
+Evaluation: hold out 10% of posts, top-k accuracy vs a "most common subreddit" baseline. Insights charts use `subreddit_info.csv` categories instead of time trends. The per-user and monthly-trend jobs in section 6 are dropped; the "try a user" page becomes "paste a post".
+
+Verified: `mapReduce` runs on `mongo:7.0`.
+
 ## 2. Why this idea
 
 - Classmates' topics (from the sheet Lebi pasted): DisasterPulse, network intrusion, WikiPulse, web log analytics (x2), GridWatch power grid, patient drug-safety, food waste, cyber threat (Hadoop + Spark), SATQuery vision-language, supply chain, real-time purchase analytics. Mostly logs, security and domain analytics.
