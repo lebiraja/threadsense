@@ -13,6 +13,14 @@ services:
       timeout: 5s
       retries: 12
 
+  pipeline:
+    build: ./pipeline
+    env_file: .env
+    depends_on:
+      mongo:
+        condition: service_healthy
+    profiles: ["tools"]
+
   downloader:
     build: ./downloader
     user: "1000:1000"
