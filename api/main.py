@@ -115,7 +115,7 @@ async def results() -> Results:
 
 @app.get("/api/categories", response_model=list[CategoryStat])
 async def categories() -> list[CategoryStat]:
-    rows = db_of().subreddit_stats.aggregate([
+    rows = await db_of().subreddit_stats.aggregate([
         {"$group": {"_id": "$category", "subreddits": {"$sum": 1}, "posts": {"$sum": "$posts"}}},
         {"$sort": {"posts": -1}}])
     return [CategoryStat(category=r["_id"], subreddits=r["subreddits"], posts=r["posts"])
@@ -161,8 +161,10 @@ async def examples() -> list[Example]:
         return app.state.examples
     out: list[Example] = []
     seen: set[str] = set()
-    async for post in db_of().posts_clean.aggregate([{"$match": {"split": "test", "n_words": {"$gte": 25, "$lte": 120}}},
-                                                     {"$sample": {"size": 400}}]):
+    cursor = await db_of().posts_clean.aggregate([
+        {"$match": {"split": "test", "n_words": {"$gte": 25, "$lte": 120}}},
+        {"$sample": {"size": 400}}])
+    async for post in cursor:
         if post["subreddit"] in seen:
             continue
         recs, _ = await score(post["text"])
