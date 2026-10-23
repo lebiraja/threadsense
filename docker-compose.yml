@@ -16,10 +16,21 @@ services:
   pipeline:
     build: ./pipeline
     env_file: .env
+    volumes:
+      - ./data:/data:ro
     depends_on:
       mongo:
         condition: service_healthy
     profiles: ["tools"]
+
+  api:
+    build: ./api
+    env_file: .env
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      mongo:
+        condition: service_healthy
 
   downloader:
     build: ./downloader

@@ -10,6 +10,6 @@ Read-only over precomputed MapReduce results, except `POST /api/recommend`, whic
 | `GET /api/categories` | `[{category, subreddits, posts}]` sorted by posts desc |
 | `GET /api/subreddits` | `[{name, category, posts}]` |
 | `GET /api/subreddits/{name}` | `{name, category, posts, neighbours: [{subreddit, sim}], top_words: [{word, weight}]}` |
-| `GET /api/graph?limit=150` | `{nodes: [{id, category, posts}], edges: [{source, target, sim}]}` (top `limit` subreddits by posts, each with its strongest links) |
+| `GET /api/graph?limit=150` | `{nodes: [{id, category, posts}], edges: [{source, target, sim}]}` (the `limit` most strongly connected subreddits and the links among them) |
 | `GET /api/examples` | 6 held-out posts that the model classifies correctly: `[{text, true_subreddit, preview}]` |
 | `POST /api/recommend` body `{"text": str}` | `{recommendations: [{subreddit, category, score, matched_words: [{word, weight}]}], n_known_words}` (top 5) |
