@@ -4,6 +4,7 @@ import os
 import re
 from collections import Counter, defaultdict
 from contextlib import asynccontextmanager
+from datetime import timezone
 from typing import Any, AsyncIterator
 
 from fastapi import FastAPI, HTTPException
@@ -97,6 +98,7 @@ async def pipeline() -> list[PipelineStep]:
         d = docs.get(name)
         if not d:
             continue
+        d["finished"] = d["finished"].replace(tzinfo=timezone.utc)  # Mongo returns naive UTC
         log = (f"$ step {d['step']}\nfinished   {d['finished']:%Y-%m-%d %H:%M:%S} UTC\n"
                f"duration   {d['duration_s']} s\nrecords in {d['records_in']:,}\n"
                f"records out {d['records_out']:,}\nnotes      {d['notes']}")
