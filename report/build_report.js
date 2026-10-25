@@ -9,6 +9,9 @@ const {
 const FONT = "Times New Roman", W = 9026; // A4, 2.54 cm margins
 const read = (f) => fs.readFileSync(f, "utf8");
 
+const TITLE = "ThreadSense: Discovering Which Reddit Communities You Belong In";
+const ME = "LEBI RAJA C (URK24AI1005)";
+
 // ---------- helpers ----------
 const run = (t, o = {}) => new TextRun({ text: t, font: FONT, size: 24, ...o });
 const body = (t, o = {}) => new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 200, line: 312 }, ...o,
@@ -22,7 +25,7 @@ const chapter = (num, title) => [
 const unnumbered = (title) => [
   new Paragraph({ pageBreakBefore: true, alignment: AlignmentType.CENTER, spacing: { after: 360 }, children: [run(title, { bold: true, size: 26 })] }),
 ];
-const h = (t) => new Paragraph({ spacing: { before: 200, after: 120 }, keepNext: true, children: [run(t, { bold: true })] });
+const h = (t) => new Paragraph({ spacing: { before: 200, after: 120 }, keepNext: true, children: [run(t, { bold: true, underline: {} })] });
 const bullet = (t) => new Paragraph({ numbering: { reference: "bul", level: 0 }, alignment: AlignmentType.JUSTIFIED,
   spacing: { after: 100, line: 300 }, children: Array.isArray(t) ? t : [run(t)] });
 const caption = (t) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 240 }, children: [run(t, { italics: true, size: 22 })] });
@@ -68,14 +71,12 @@ const JOB1_REDUCE = grab("pipeline/job1_wordcount.py", "REDUCE");
 const JOB2_FINALIZE = grab("pipeline/job2_index.py", "FINALIZE");
 const JOB3_PAIR = grab("pipeline/job3_similarity.py", "PAIR_MAP");
 
-const TITLE = "ThreadSense: Discovering Which Reddit Communities You Belong In";
-const ME = "LEBI RAJA C (URK24AI1005)";
 
 // ---------- front matter ----------
 const cover = [
   gap(300), logo(), gap(500),
   centre("DIVISION OF DATA SCIENCE AND CYBER SECURITY"), centre("SCHOOL OF COMPUTER SCIENCE AND TECHNOLOGY"), gap(300),
-  centre("A SKILL BASED EVALUATION REPORT"), gap(700),
+  centre("A SKILL BASED EVALUATION REPORT"), centre(TITLE), gap(600),
   centre("SUBMITTED BY"), centre(ME), gap(500),
   centre("COURSE CODE"), centre("23DC2043"), gap(300),
   centre("COURSE NAME"), centre("BIG DATA TOOLS AND TECHNIQUES"), gap(500),
@@ -92,7 +93,7 @@ const titlePage = [
   centre([run("A REAL TIME APPLICATION REPORT", { bold: true, italics: true })]),
   centre([run("Submitted by", { italics: true, bold: true })]),
   centre(ME), gap(400),
-  logo(), gap(300),
+  img("report/assets/karunya_emblem.png", 110), gap(300),
   centre("DIVISION OF DATA SCIENCE AND CYBER SECURITY KARUNYA INSTITUTE OF TECHNOLOGY AND SCIENCES (Declared as Deemed to be under Sec 3 of the UGC Act, 1956) Karunya Nagar, Coimbatore 641 114. INDIA"),
   gap(300), centre("Oct 2026."),
 ];
@@ -127,6 +128,15 @@ const ch2 = [
   body("MapReduce was introduced by Dean and Ghemawat as a way to process large data in two steps. A map function turns each record into key and value pairs, and a reduce function combines the values that share a key [1]. MongoDB supports this through its mapReduce command, where both functions are written in JavaScript. MongoDB has marked this command as deprecated since version 5.0 and recommends aggregation pipelines instead [5]. It still works on MongoDB 7.0, which we confirmed before starting."),
   body("TF-IDF is an old and reliable way to find the words that matter in a text. A word that appears in only a few documents tells you more than a word that appears everywhere [3]. Salton and Buckley showed that combining how often a word appears with how rare it is gives good results [2]. Documents can then be compared with cosine similarity, which measures how close two lists of weights are [8]."),
   body("Recommender systems are usually either collaborative, which use what many users did, or content based, which use the item itself [7]. Our data has no users, so we use a content based method that matches the words of a post to the vocabulary of each community. Large Reddit collections such as Pushshift are common in research [4], and the Kaggle dataset we used is a smaller and more balanced sample [6]."),
+  h("Comparison with Other Approaches"),
+  table([
+    ["Feature", "Keyword search", "Collaborative filtering", "ThreadSense"],
+    ["Needs user history", "No", "Yes", "No"],
+    ["Uses the words of a post", "Partly", "No", "Yes"],
+    ["Suggests a community", "No", "Yes", "Yes"],
+    ["Explains its choice", "No", "Rarely", "Yes, matched words"],
+  ], [2500, 1900, 2300, 2326]),
+  gap(),
   body("Hadoop and Spark run MapReduce across many machines. We use a single MongoDB instance and do not claim distributed processing. What this project adds is one complete workflow from raw data to a live demo, with a fair test and a comparison between mapReduce and aggregation."),
 ];
 
